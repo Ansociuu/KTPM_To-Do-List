@@ -1,3 +1,8 @@
+
+// =============================
+// todolist.js (đã sửa - auto sắp xếp + move + giữ gạch chữ ở Done)
+// =============================
+
 function showForm(button) {
     const columnContent = button.parentElement;
     if (columnContent.querySelector('.task-form')) return;
@@ -34,6 +39,7 @@ function showForm(button) {
         if (text) {
             const task = createTaskElement({ text, date, time, note });
             columnContent.insertBefore(task, button);
+            sortTasksInColumn(columnContent);
             saveTasksToLocalStorage();
         }
 
@@ -89,6 +95,8 @@ function editTask(task) {
         if (newText) {
             const updatedTask = createTaskElement({ text: newText, date: newDate, time: newTime, note: newNote });
             task.replaceWith(updatedTask);
+            const columnContent = updatedTask.closest(".column-content");
+            sortTasksInColumn(columnContent);
             saveTasksToLocalStorage();
         }
     };
@@ -118,6 +126,7 @@ function createTaskElement({ text, date, time, note }) {
         <div class="task-actions">
             <button class="edit-btn">Edit</button>
             <button class="delete-btn">Delete</button>
+            <button class="move-btn">Move</button>
         </div>
     `;
 
@@ -127,11 +136,94 @@ function createTaskElement({ text, date, time, note }) {
 
     task.querySelector(".edit-btn").onclick = () => editTask(task);
     task.querySelector(".delete-btn").onclick = () => {
-        task.remove();
-        saveTasksToLocalStorage();
+        showDeleteConfirm(task);
     };
 
+    task.querySelector(".move-btn").onclick = () => moveTask(task);
+
+    const column = task.closest(".column") || findColumnOfTask(task);
+    if (column) {
+        const colTitle = column.querySelector(".column-title")?.innerText.trim();
+        if (colTitle === "Done") {
+            task.querySelector(".task-title").style.textDecoration = "line-through";
+        }
+    }
+
     return task;
+}
+
+function showDeleteConfirm(task) {
+    const overlay = document.getElementById("delete-confirm-overlay");
+    overlay.classList.remove("hidden");
+
+    const confirmBtn = document.getElementById("confirm-delete-btn");
+    const cancelBtn = document.getElementById("cancel-delete-btn");
+
+    const handleConfirm = () => {
+        task.remove();
+        saveTasksToLocalStorage();
+        cleanup();
+    };
+
+    const cleanup = () => {
+        overlay.classList.add("hidden");
+        confirmBtn.removeEventListener("click", handleConfirm);
+        cancelBtn.removeEventListener("click", cleanup);
+    };
+
+    confirmBtn.addEventListener("click", handleConfirm);
+    cancelBtn.addEventListener("click", cleanup);
+}
+
+
+function findColumnOfTask(task) {
+    const allColumns = document.querySelectorAll(".column");
+    for (const column of allColumns) {
+        if (column.querySelector(".column-content")?.contains(task)) {
+            return column;
+        }
+    }
+    return null;
+}
+
+function moveTask(task) {
+    const currentColumn = task.closest(".column");
+    const allColumns = Array.from(document.querySelectorAll(".column"));
+    const currentIndex = allColumns.indexOf(currentColumn);
+    const nextIndex = (currentIndex + 1) % allColumns.length;
+    const nextColumn = allColumns[nextIndex].querySelector(".column-content");
+
+    nextColumn.insertBefore(task, nextColumn.querySelector(".create-task"));
+    sortTasksInColumn(nextColumn);
+    saveTasksToLocalStorage();
+}
+
+function sortTasksInColumn(columnContent) {
+    const tasks = Array.from(columnContent.querySelectorAll(".task"));
+
+    tasks.sort((a, b) => {
+        const getDateTime = (el) => {
+            const dateText = el.querySelector(".task-date")?.innerText || "";
+            const dateMatch = dateText.match(/📅 (\d{4}-\d{2}-\d{2})/);
+            const timeMatch = dateText.match(/🕒 (\d{2}:\d{2})/);
+            const date = dateMatch ? dateMatch[1] : "";
+            const time = timeMatch ? timeMatch[1] : "00:00";
+            return date ? new Date(`${date}T${time}`) : null;
+        };
+
+        const aTime = getDateTime(a);
+        const bTime = getDateTime(b);
+
+        if (!aTime && !bTime) return 0;
+        if (!aTime) return 1;
+        if (!bTime) return -1;
+
+        return aTime - bTime;
+    });
+
+    tasks.forEach(task => {
+        columnContent.insertBefore(task, columnContent.querySelector(".create-task"));
+    });
 }
 
 let draggedTask = null;
@@ -158,6 +250,7 @@ function handleDrop(e) {
         const colTitle = columnContent.closest(".column").querySelector(".column-title").innerText.trim();
         titleEl.style.textDecoration = (colTitle === "Done") ? "line-through" : "none";
 
+        sortTasksInColumn(columnContent);
         saveTasksToLocalStorage();
     }
 }
@@ -196,13 +289,19 @@ function loadTasksFromLocalStorage() {
         colData.tasks.forEach(taskData => {
             const task = createTaskElement(taskData);
             container.insertBefore(task, container.querySelector(".create-task"));
+
+            const colTitle = column.querySelector(".column-title").innerText.trim();
+            if (colTitle === "Done") {
+                task.querySelector(".task-title").style.textDecoration = "line-through";
+            }
         });
+
+
+        sortTasksInColumn(container);
     });
 }
 
-// ✅ Gộp tất cả vào 1 listener duy nhất
 document.addEventListener("DOMContentLoaded", () => {
-    // Menu toggle
     const menuBtn = document.querySelector(".menu-toggle");
     const menuPanel = document.querySelector(".menu-panel");
     if (menuBtn && menuPanel) {
@@ -211,12 +310,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Kéo thả
     document.querySelectorAll(".column-content").forEach(col => {
         col.addEventListener("dragover", handleDragOver);
         col.addEventListener("drop", handleDrop);
     });
 
-    // Tải dữ liệu (chỉ gọi 1 lần)
     loadTasksFromLocalStorage();
 });
