@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Login | ToDo App</title>
+    <link rel="stylesheet" href="login.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="login-container">
+        <h1 class="experience-text">great experience</h1>
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+        <div class="options">
+            <label><input type="checkbox" /> Remember me</label>
+            <a href="#">Forgot Password?</a>
+        </div>
+        <button onclick="login()">Log In</button>
+        <p class="register">Don't have an account? <a href="#">Register</a></p>
+    </div>
+
+    <script>
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            if (email && password) {
+                // (có thể kiểm tra logic tại đây)
+                localStorage.setItem("userEmail", email);
+                window.location.href = "todolist.html";
+            } else {
+                alert("Please enter email and password.");
+            }
+        }
+    </script>
+</body>
+<script>
+    window.addEventListener("load", () => {
+        const title = document.querySelector(".experience-text");
+        setTimeout(() => {
+            title.style.borderRight = "none"; // Bỏ dấu nháy sau khi gõ xong
+            title.style.animation = "typing 2.5s steps(20, end) 1s 1 normal both"; // Dừng blink
+        }, 3500); // Tùy thời gian gõ (phải trùng với thời gian animation)
+    });
+</script>
+
+
+</html>
