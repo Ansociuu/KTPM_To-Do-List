@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Just do it!</title>
+    <link rel="stylesheet" href="todolist.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-b1MGZrP5+chQeEZi6ey0F5LfYHZcGJ...==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+    <main class="wrapper">
+        <div class="menu-toggle">
+            <img src="IMAGES/menu (1).png" alt="menu" />
+        </div>
+
+        <div class="menu-panel">
+            <button><img src="IMAGES/pie-chart.png" alt="Statistics" class="menu-icon" /></button>
+            <button><img src="IMAGES/history.png" alt="History" class="menu-icon" /></button>
+            <button><img src="IMAGES/settings.png" alt="Settings" class="menu-icon" /></button>
+        </div>
+
+
+        <h1 class="title">Just do it !</h1>
+
+        <div class="board">
+            <div class="column">
+                <div class="column-title">To Do</div>
+                <div class="column-content">
+                    <div class="create-task" onclick="showForm(this)">+ Create</div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="column-title">In Progress</div>
+                <div class="column-content">
+                    <div class="create-task" onclick="showForm(this)">+ Create</div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="column-title">Done</div>
+                <div class="column-content">
+                    <div class="create-task" onclick="showForm(this)">+ Create</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 Just Do It - All rights reserved</p>
+    </footer>
+
+    <script src="todolist.js"></script>
+</body>
+
+</html>
