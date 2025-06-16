@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', sans-serif;
-    background-image: url("IMAGES/br1.png");
+    background-image: url("IMAGES/br4.png");
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -105,29 +105,71 @@ button:hover {
 }
 
 .experience-text {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid white;
-  animation:
-    typing 2.5s steps(20, end) 1s 1 normal both,
-    blink 0.7s steps(1) infinite;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid white;
+    animation:
+        typing 2.5s steps(20, end) 1s 1 normal both,
+        blink 0.7s steps(1) infinite;
 
-  font-family: 'Pacifico', cursive;
-  font-size: 2.4rem;
-  color: rgb(222, 73, 138);
-  display: inline-block;
-  width: fit-content;
-  position: relative;
+    font-family: 'Pacifico', cursive;
+    font-size: 2.4rem;
+    color: rgb(246, 238, 241);
+    display: inline-block;
+    width: fit-content;
+    position: relative;
 }
 
 /* Dấu nháy nhấp nháy */
 @keyframes blink {
-  0%, 100% { border-color: transparent; }
-  50% { border-color: white; }
+
+    0%,
+    100% {
+        border-color: transparent;
+    }
+
+    50% {
+        border-color: white;
+    }
 }
 
 /* Hiệu ứng gõ */
 @keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* Thêm style cho trang đăng ký */
+.login-container input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.password-strength {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 12px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0;
+    background-color: #ff4757;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.error-message {
+    color: #ff6b81;
+    font-size: 0.8rem;
+    margin: -8px 0 8px 0;
+    text-align: left;
+    display: none;
 }

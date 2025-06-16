@@ -1,9 +1,11 @@
+/* ========== RESET ========== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ========== NỀN & CHUNG ========== */
 body {
     font-family: sans-serif;
     background-image: linear-gradient(100deg, #575656, #062e3f);
@@ -17,42 +19,36 @@ body {
     color: #ffffff;
 }
 
-.settings-icon {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 2rem;
-    border: 2px solid black;
-    border-radius: 50%;
-    padding: 5px;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+main.wrapper {
+    min-height: 81vh;
+    margin-left: 200px;
+    transition: margin-left 0.3s ease;
 }
 
+/* Khi sidebar thu gọn */
+.sidebar.collapsed+.wrapper {
+    margin-left: 60px;
+}
+
+/* ========== BẢNG CÔNG VIỆC ========== */
 .board {
     display: flex;
     gap: 30px;
     justify-content: center;
-    align-items: flex-start;   /* Mỗi cột có chiều cao riêng */
+    align-items: flex-start;
 }
-
 
 .column {
     border: 3px solid black;
     border-radius: 20px;
-    width: 280px;               /* hoặc rộng hơn nếu bạn thích */
+    width: 280px;
     background-color: #fff;
-    box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     padding: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
-
 
 .column-title {
     background-color: #ddd;
@@ -80,6 +76,7 @@ body {
     margin-top: 10px;
 }
 
+/* ========== TASK ========== */
 .task {
     background-color: #ddd;
     padding: 10px;
@@ -89,42 +86,17 @@ body {
     text-align: left;
 }
 
-.task-form {
-    width: 100%;
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.task-form input {
-    padding: 10px;
-    font-size: 16px;
-    width: 100%;
-    border: 2px solid #aaa;
-    border-radius: 8px;
-}
-
-
-.task-form button {
-    padding: 5px;
-    font-size: 16px;
-}
-
-.task-form .add-btn {
-    background-color: #4caf50;
-    color: white;
-}
-
-.task-form .cancel-btn {
-    background-color: #f44336;
-    color: white;
-}
-
 .task-date {
     font-size: 0.9em;
     color: #555;
     margin-top: 2px;
+}
+
+.task-note {
+    font-size: 0.9em;
+    color: #444;
+    margin-top: 4px;
+    white-space: pre-wrap;
 }
 
 .task-actions {
@@ -142,6 +114,47 @@ body {
     background-color: #eee;
 }
 
+/* ========== FORM ========== */
+.task-form {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.task-form input,
+.task-form textarea,
+.edit-note-input {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 2px solid #aaa;
+    border-radius: 8px;
+}
+
+.task-form textarea,
+.edit-note-input {
+    resize: vertical;
+    font-size: 14px;
+    padding: 8px;
+}
+
+.task-form button {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.task-form .add-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.task-form .cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
+
 .form-row {
     display: flex;
     align-items: center;
@@ -156,7 +169,7 @@ body {
     padding: 5px;
 }
 
-
+/* Hiện/ẩn phần ngày giờ */
 .datetime-fields {
     overflow: hidden;
     max-height: 500px;
@@ -169,119 +182,111 @@ body {
     opacity: 0;
 }
 
-.task-note {
-    font-size: 0.9em;
-    color: #444;
-    margin-top: 4px;
-    white-space: pre-wrap;
-}
-
-.task-form textarea,
-.edit-note-input {
-    padding: 8px;
-    font-size: 14px;
-    border: 2px solid #aaa;
-    border-radius: 8px;
-    resize: vertical;
-}
-
-/* ===== MENU TOGGLE ICON (NÚT MENU GỐC) ===== */
-.menu-toggle {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    cursor: pointer;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    padding: 0;
-    transition: box-shadow 0.3s ease;
-}
-
-.menu-toggle:hover {
-    box-shadow: 0 0 10px #fff;
-}
-
-.menu-toggle img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-
-/* ===== MENU PANEL DROPDOWN ===== */
-.menu-panel {
-    position: absolute;
-    top: 80px;
-    left: 20px;
-
+/* ========== SIDEBAR ========== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 100vh;
+    background-color: #1e1e1e;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
-
-    max-height: 0;
-    opacity: 0;
-    visibility: hidden;
-    overflow: visible;
-
-    transition: max-height 0.4s ease, opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 90;
+    padding: 10px;
+    z-index: 1000;
+    transition: width 0.3s ease;
+    align-items: stretch;
 }
 
-.menu-panel.open {
-    max-height: 500px;
-    opacity: 1;
-    visibility: visible;
-}
-
-
-
-/* ===== MENU ICON TRONG MENU PANEL ===== */
-.menu-panel button {
+.sidebar-toggle {
     background: none;
     border: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.menu-panel .menu-icon {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    transition: transform 0.2s;
-    display: block;
-}
-
-.menu-panel .menu-icon:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
-
-
-
-.footer {
-    margin-top: 50px;
     color: white;
-    font-size: 0.9rem;
-    text-align: center;
-    opacity: 0.6;
+    font-size: 1.5rem;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-bottom: 20px;
 }
 
-main {
-    min-height: 81vh;
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    overflow: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
+.sidebar-top,
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar button {
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar button:hover {
+    background-color: #333;
+}
+
+.menu-icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0.9);
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.menu-icon:hover {
+    transform: scale(1.2);
+    filter: brightness(1.5);
+}
+
+.sidebar button span {
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+/* Khi thu gọn sidebar */
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar.collapsed .sidebar-content span {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    display: inline-block;
+    transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-content button {
+    justify-content: center;
+}
+
+.sidebar-content span {
+    transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+/* ========== POPUP XÁC NHẬN XÓA ========== */
 .confirm-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
@@ -328,4 +333,392 @@ main {
 
 .confirm-overlay.hidden {
     display: none;
+}
+
+/* ========== FOOTER ========== */
+.footer {
+    margin-top: 50px;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 0.6;
+}
+
+.task-search {
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+#search-input {
+    width: 80%;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #aaa;
+}
+
+.popup-panel {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    background-color: white;
+    border: 2px solid #333;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+    width: 280px;
+    text-align: left;
+}
+
+.popup-panel h2 {
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+    color: #222;
+}
+
+.popup-panel ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.popup-panel.hidden {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ===== USER INFO ===== */
+.user-info {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 1100;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ffffff22;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-avatar:hover {
+    background-color: #ffffff44;
+}
+
+.user-avatar img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.user-menu {
+    margin-top: 8px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 6px 10px;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.user-menu button:hover {
+    background-color: #eee;
+}
+
+.user-menu.hidden {
+    display: none;
+}
+
+/* ===== SETTINGS PANEL (CẬP NHẬT) ===== */
+#settings-panel {
+    position: fixed;
+    top: 400px;
+    /* Đặt ngay dưới nút Settings trong sidebar */
+    left: 200px;
+    /* Căn lề trái, sát sidebar */
+    width: 200px;
+    /* Giảm kích thước panel */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    padding: 15px;
+    /* Giảm padding */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px);
+    /* Hiệu ứng trượt nhẹ khi mở */
+    opacity: 0;
+}
+
+#settings-panel.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Điều chỉnh panel khi sidebar thu gọn */
+.sidebar.collapsed~#settings-panel {
+    left: 70px;
+    /* Dịch sang phải khi sidebar thu gọn */
+}
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#settings-panel h2 {
+    font-size: 1.1rem;
+    /* Giảm kích thước tiêu đề */
+    margin-bottom: 8px;
+    color: #222;
+}
+
+#settings-panel label {
+    font-size: 0.85rem;
+    /* Giảm kích thước chữ */
+    margin-bottom: 3px;
+    display: block;
+    color: #333;
+}
+
+#settings-panel input[type="color"] {
+    width: 100%;
+    height: 30px;
+    /* Giảm chiều cao input màu */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+#settings-panel input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#settings-panel button {
+    width: 100%;
+    padding: 6px;
+    /* Giảm padding nút */
+    font-size: 0.9rem;
+    /* Giảm kích thước chữ */
+    background-color: #0984e3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#settings-panel button:hover {
+    background-color: #0073c2;
+}
+
+#settings-panel button:last-child {
+    background-color: #d63031;
+}
+
+#settings-panel button:last-child:hover {
+    background-color: #c0392b;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    /* Giảm kích thước nút đóng */
+    cursor: pointer;
+    color: #333;
+}
+
+body.dark-mode {
+    background: #121212;
+    color: white;
+}
+
+body.dark-mode .column {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+body.dark-mode .task {
+    background-color: #2c2c2c;
+    color: white;
+}
+
+body.dark-mode #settings-panel {
+    background: #2c2c2c;
+    color: white;
+}
+
+body.dark-mode #settings-panel h2,
+body.dark-mode #settings-panel label,
+body.dark-mode #settings-panel .close-btn {
+    color: white;
+}
+
+.history-item {
+    background-color: #ffffff10;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    color: white;
+    text-align: left;
+}
+
+.history-item div {
+    margin: 4px 0;
+}
+
+.history-list {
+    max-height: auto;
+    padding: 10px;
+    background-color: #ffffff10;
+    border-radius: 12px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Thêm vào file todolist.css */
+.board,
+#statistics-section,
+#history-section {
+    transition: all 0.3s ease;
+}
+
+#history-section {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.calendar-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    margin: 20px 0;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+}
+
+.calendar-day {
+    background-color: #ffffff10;
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 80px;
+    position: relative;
+}
+
+.calendar-day .day-number {
+    font-weight: bold;
+}
+
+.calendar-task {
+    margin-top: 5px;
+    background-color: #3498db;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.calendar-controls button {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.calendar-controls button img {
+    background: none !important;
+    border-radius: 0;
+    display: inline-block;
+}
+
+.task-countdown {
+    font-size: 0.9em;
+    color: #d63031;
+    margin-top: 4px;
+}
+
+.task-countdown.warning {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.task-assignee {
+    font-size: 0.85em;
+    color: #2c3e50;
+    margin-top: 4px;
+}
+
+.sidebar button.active {
+    background-color: #444 !important;
+    font-weight: bold;
+    border-left: 4px solid #00cec9;
 }

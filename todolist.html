@@ -2,28 +2,85 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Just do it!</title>
-    <link rel="stylesheet" href="todolist.css">
+    <link rel="stylesheet" href="todolist.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-b1MGZrP5+chQeEZi6ey0F5LfYHZcGJ...==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+        integrity="sha512-b1MGZrP5..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <main class="wrapper">
-        <div class="menu-toggle">
-            <img src="IMAGES/menu (1).png" alt="menu" />
+        <div class="user-info">
+            <div class="user-avatar" onclick="toggleUserMenu()">
+                <img src="IMAGES/user.png" alt="Avatar">
+                <span class="user-name">Hi, User</span>
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none" />
+            </div>
+            <div id="user-menu" class="user-menu hidden">
+                <button onclick="changeAvatar()"> Đổi ảnh</button>
+                <button onclick="logout()"> Đăng xuất</button>
+            </div>
         </div>
 
-        <div class="menu-panel">
-            <button><img src="IMAGES/pie-chart.png" alt="Statistics" class="menu-icon" /></button>
-            <button><img src="IMAGES/history.png" alt="History" class="menu-icon" /></button>
-            <button><img src="IMAGES/settings.png" alt="Settings" class="menu-icon" /></button>
-        </div>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="sidebar-toggle">
+                <img src="IMAGES/menu (1).png" alt="Toggle" class="menu-icon" />
+            </button>
 
+            <div class="sidebar-content">
+                <div class="sidebar-top">
+                    <button id="btn-board"><img src="IMAGES/target.png" class="menu-icon" /><span>Board</span></button>
+                    <button id="btn-statistics"><img src="IMAGES/pie-chart.png"
+                            class="menu-icon" /><span>Statistics</span></button>
+                    <button id="btn-history">
+                        <img src="IMAGES/history.png" class="menu-icon" /><span>History</span>
+                    </button>
+                    <button id="btn-calendar"><img src="IMAGES/calendar.png"
+                            class="menu-icon" /><span>Calendar</span></button>
+
+                </div>
+
+                <div class="sidebar-bottom">
+                    <button id="btn-settings">
+                        <img src="IMAGES/settings.png" class="menu-icon" />
+                        <span>Settings</span>
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Settings Panel -->
+        <!-- Thay thế phần settings panel bằng đoạn này -->
+        <div id="settings-panel" class="hidden">
+            <div class="panel-content">
+
+                <h3>🎨 Cài đặt giao diện</h3>
+                <label>
+                    <input type="checkbox" id="dark-mode-toggle" />
+                    Chế độ tối
+                </label>
+                <div style="margin-top: 10px;">
+                    <label>Chọn màu trái:</label>
+                    <input type="color" id="left-color" />
+                </div>
+                <div style="margin-top: 10px;">
+                    <label>Chọn màu phải:</label>
+                    <input type="color" id="right-color" />
+                </div>
+                <button onclick="applyTheme()">Áp dụng</button>
+                <button onclick="resetTheme()">Đặt lại</button>
+            </div>
+        </div>
 
         <h1 class="title">Just do it !</h1>
+
+        <div class="task-search">
+            <input type="text" id="search-input" placeholder="🔍 Tìm kiếm theo từ khoá hoặc ngày..." />
+        </div>
 
         <div class="board">
             <div class="column">
@@ -32,14 +89,12 @@
                     <div class="create-task" onclick="showForm(this)">+ Create</div>
                 </div>
             </div>
-
             <div class="column">
                 <div class="column-title">In Progress</div>
                 <div class="column-content">
                     <div class="create-task" onclick="showForm(this)">+ Create</div>
                 </div>
             </div>
-
             <div class="column">
                 <div class="column-title">Done</div>
                 <div class="column-content">
@@ -47,6 +102,52 @@
                 </div>
             </div>
         </div>
+
+        <div id="statistics-section" class="hidden">
+            <h2 style="color: white; margin-bottom: 20px;"></h2>
+            <div style="display: flex; gap: 30px; justify-content: center; align-items: flex-start; flex-wrap: wrap;">
+                <!-- Biểu đồ -->
+                <canvas id="pieChart" width="300" height="300" style="flex-shrink: 0;"></canvas>
+
+                <!-- Bảng task -->
+                <div style="overflow-x: auto; max-width: 700px; flex-grow: 1;">
+                    <h3 style="color: white;"> Danh sách tất cả các task</h3>
+                    <table id="task-table"
+                        style="width: 100%; margin-top: 10px; color: white; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #ffffff22;">
+                                <th style="padding: 10px; border: 1px solid #ccc;">Tên task</th>
+                                <th style="padding: 10px; border: 1px solid #ccc;">Ngày</th>
+                                <th style="padding: 10px; border: 1px solid #ccc;">Giờ</th>
+                                <th style="padding: 10px; border: 1px solid #ccc;">Ghi chú</th>
+                                <th style="padding: 10px; border: 1px solid #ccc;">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="history-section" class="hidden">
+            <h2 style="color: white; margin-bottom: 20px;">Lịch sử các task đã tạo</h2>
+            <button onclick="clearHistory()"
+                style="margin-bottom: 15px; padding: 8px 16px; background-color: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Xoá lịch sử
+            </button>
+            <div id="history-list" class="history-list"></div>
+        </div>
+        <div id="calendar-section" class="hidden">
+            <div class="calendar-controls">
+                <button id="calendar-prev"><img src="IMAGES/arrow.png" alt="Previous" class="menu-icon" /></button>
+                <span id="calendar-month"></span>
+                <button id="calendar-next"><img src="IMAGES/right-arrow.png" alt="Next" class="menu-icon" /></button>
+            </div>
+            <div id="calendar-grid" class="calendar-grid"></div>
+        </div>
+
+
     </main>
 
     <footer class="footer">
@@ -63,6 +164,36 @@
         </div>
     </div>
 
+    <div id="clear-history-overlay" class="confirm-overlay hidden">
+        <div class="confirm-box">
+            <p>Bạn có chắc chắn muốn xoá toàn bộ lịch sử?</p>
+            <div class="confirm-buttons">
+                <button id="confirm-clear-history-btn">Xoá</button>
+                <button id="cancel-clear-history-btn">Huỷ</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="logout-modal" class="confirm-overlay hidden">
+        <div class="confirm-box">
+            <p>Bạn có chắc chắn muốn đăng xuất?</p>
+            <div class="confirm-buttons">
+                <button id="confirm-logout-btn">Đăng xuất</button>
+                <button id="cancel-logout-btn">Huỷ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="logout-modal" class="confirm-overlay hidden">
+        <div class="confirm-box">
+            <p>Are you sure you want to logout?</p>
+            <div class="confirm-buttons">
+                <button id="confirm-logout-btn">Logout</button>
+                <button id="cancel-logout-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script src="todolist.js"></script>
 </body>
