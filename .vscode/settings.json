@@ -1,0 +1,12 @@
+{
+       "editor.stickyTabStops": true,
+       "editor.tabSize": 8,
+      "typescript.suggest.autoImports": true,
+      "javascript.suggest.autoImports": true,
+      "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        },
+      "editor.suggestOnTriggerCharacters": true
+}
