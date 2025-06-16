@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Language {
+  vi
+  en
+  ja
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  password       String
+  name           String
+  language       Language        @default(vi)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime?       @updatedAt
+
+  // Quan hệ
+  tasks          Task[]          // 1 User → N Task
+  tasklogs      TaskLog[]   
+  rewards    Reward[]
+  templates      Template[]      // 1 User → N Template
+  teamMembers    TeamMember[]    // 1 User → N TeamMember
+  performanceLogs PerformanceLog[] // 1 User → N PerformanceLog
+
+
+  ChatMessage ChatMessage[]
+}
+
+model Task {
+  id             Int           @id @default(autoincrement())
+  title          String
+  description    String?
+  dueDate        DateTime?
+  isCompleted    Boolean       @default(false)
+  countdownStart DateTime?
+  countdownEnd   DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+   
+   // ✅ Quan hệ cha - con
+  parent      Task?     @relation("SubTasks", fields: [parentId], references: [id])
+  parentId    Int?
+
+  subTasks    Task[]    @relation("SubTasks")
+
+
+  // Quan hệ
+  tasklogs      TaskLog[]   
+
+  templateId     Int?
+  template       Template?     @relation(fields: [templateId], references: [id]) // Optional template
+
+  userId         Int
+  user           User          @relation(fields: [userId], references: [id]) // Mỗi Task thuộc 1 User
+
+  teamId         Int?
+  team           Team?         @relation(fields: [teamId], references: [id]) // Optional team
+}
+
+enum TaskAction {
+  Created
+  Updated
+  Completed
+  Deleted
+}
+
+model TaskLog {
+  id         Int       @id @default(autoincrement())
+  taskId     Int
+  action     TaskAction     // created, updated, completed, deleted
+  timestamp  DateTime   @default(now())
+  userId     Int?
+
+  task       Task       @relation(fields: [taskId], references: [id])
+  user       User?      @relation(fields: [userId], references: [id])
+}
+
+model Reward {
+  id         Int       @id @default(autoincrement())
+  points     Int
+  reason     String
+  createdAt  DateTime  @default(now())
+
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+}
+
+model Template {
+  id          Int       @id @default(autoincrement())
+  name        String
+  content     String?
+  userId      Int       //user tạo template?
+
+  user        User      @relation(fields: [userId], references: [id]) // Mỗi Template thuộc 1 User
+  isPublic  Boolean @default(false) // true nếu là template do admin tạo
+  tasks       Task[]    // Optional: nếu bạn muốn lấy tất cả task dùng template này
+}
+
+model Team {
+  id          Int           @id @default(autoincrement())
+  name        String
+  createdAt   DateTime      @default(now())
+
+  tasks       Task[]        // 1 Team → N Task
+  members     TeamMember[]  // 1 Team → N TeamMember
+
+  PerformanceLog PerformanceLog[]
+
+  ChatMessage ChatMessage[]
+}
+
+enum TeamRole {
+  Member
+  Admin
+}
+
+model TeamMember {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  teamId    Int
+  role      TeamRole  @default(Member) // "member" | "admin"
+
+  user      User    @relation(fields: [userId], references: [id])
+  team      Team    @relation(fields: [teamId], references: [id])
+
+}
+
+model PerformanceLog {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  completed   Int
+  pending     Int
+  week        DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id]) // Mỗi log thuộc 1 user
+  teamId Int?
+  team   Team? @relation(fields: [teamId], references: [id])
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  content   String
+  senderId  Int
+  teamId    Int
+  createdAt DateTime @default(now())
+
+  sender    User     @relation(fields: [senderId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id])
+}
