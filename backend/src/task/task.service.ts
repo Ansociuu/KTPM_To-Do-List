@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Status } from 'src/common/enums/status.enum';
+
 
 @Injectable()
 export class TaskService {
@@ -18,7 +20,10 @@ export class TaskService {
 
   async findAll(userId: number) {
     return this.prisma.task.findMany({
-      where: { userId },
+      where: { userId, parentId: null },
+      include: {
+      subTasks: true,       // lấy luôn subtasks của task này
+      },
     });
   }
 
@@ -32,25 +37,6 @@ export class TaskService {
   async remove(id: number) {
     return this.prisma.task.delete({
       where: { id },
-    });
-  }
-
-  async startPomodoro(taskId: number) {
-  const now = new Date();
-  const end = new Date(now.getTime() + 25 * 60 * 1000); // 25 phút
-
-    return this.prisma.task.update({
-      where: { id: taskId },
-      data: {
-        countdownStart: now,
-        countdownEnd: end,
-      },
-      select: {
-        id: true,
-        title: true,
-        countdownStart: true,
-        countdownEnd: true,
-      },
     });
   }
 
@@ -75,6 +61,68 @@ export class TaskService {
   async getSubTasks(parentId: number) {
     return this.prisma.task.findMany({
       where: { parentId },
+    });
+  }
+
+  async getTaskById(id: number) {
+  return this.prisma.task.findUnique({
+    where: { id },
+    include: {      //Dùng include khi muốn bao gồm các mối quan hệ (tức lấy thêm các đối tượng liên quan)
+      subTasks: true,       // nếu muốn lấy luôn subtasks của task này
+      parent: true,         // nếu muốn biết task này có cha không
+      template: true,       // nếu muốn biết task này thuộc template nào
+    },
+  });
+}
+
+  async markTaskAsCompleted(id: number) {
+    return this.prisma.task.update({
+      where: { id },
+      data: {
+        status: 'Completed',
+        updatedAt: new Date(), // không bắt buộc, nhưng tốt cho tracking
+      },
+    });
+  }
+
+  async updateTaskStatus(id: number, status: Status) {
+    return this.prisma.task.update({
+      where: { id },
+      data: { 
+        status, 
+        updatedAt: new Date(), 
+      },
+    });
+  }
+
+  async getPersonalTasks(userId: number) {
+  return this.prisma.task.findMany({
+    where: {
+      userId,
+      dueDate: { not: null },
+    },
+    select: {       //Dùng select để chỉ định các trường cụ thể của một bảng
+      title: true,
+      priority: true,
+      status: true,
+    },
+  });
+}
+
+  async getTeamTasks(teamId: number) {
+    return this.prisma.task.findMany({
+      where: {
+        teamId,
+        dueDate: { not: null },
+      },
+      select: {
+        title: true,
+        priority: true,
+        status: true,
+        assignee: {
+          select: { name: true }, // nếu muốn hiển thị người giao nhiệm vụ
+        },
+      },
     });
   }
 

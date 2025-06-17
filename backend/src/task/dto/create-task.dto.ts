@@ -13,18 +13,6 @@ export class CreateTaskDto {
   dueDate?: string;
 
   @IsOptional()
-  @IsDateString()
-  countdownStart?: string;
-
-  @IsOptional()
-  @IsDateString()
-  countdownEnd?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  isCompleted?: boolean;
-
-  @IsOptional()
   templateId?: number;
 
   @IsOptional()

@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateStatusDto } from './dto/update-status.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -35,11 +36,6 @@ export class TaskController {
     return this.taskService.remove(id);
   }
 
-  @Patch(':id/pomodoro')
-  async startPomodoro(@Param('id') id: string) {
-    return this.taskService.startPomodoro(+id);
-  }
-
   @Post(':parentId/subtasks')
   createSubTask(
     @Param('parentId', ParseIntPipe) parentId: number,
@@ -54,5 +50,39 @@ export class TaskController {
   getSubTasks(@Param('parentId', ParseIntPipe) parentId: number) {
     return this.taskService.getSubTasks(parentId);
   }
-  
+
+  @Get(':id')
+  getTaskById(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.getTaskById(id);
+  }
+
+  @Patch(':id/complete')
+  markTaskAsCompleted(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.markTaskAsCompleted(id);
+  }
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateStatusDto
+  ) {
+      return this.taskService.updateTaskStatus(id, dto.status);
+    }
+
+  // Calendar view
+  @Get('calendar/personal')
+  getPersonalCalendar(@Req() req: Request) {
+    const user = req.user as any;
+    return this.taskService.getPersonalTasks(user.id);
+  }
+
+  @Get('calendar/team/:teamId')
+  getTeamCalendar(
+    @Param('teamId', ParseIntPipe) teamId: number,
+    @Req() req: Request,
+  ) {
+    // Optional: kiểm tra user có thuộc team không nếu muốn bảo vệ
+    return this.taskService.getTeamTasks(teamId);
+  }
+
 }

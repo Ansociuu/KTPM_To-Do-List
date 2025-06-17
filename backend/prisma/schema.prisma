@@ -28,7 +28,7 @@ model User {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime?       @updatedAt
 
-  // Quan hệ
+
   tasks          Task[]          // 1 User → N Task
   tasklogs      TaskLog[]   
   rewards    Reward[]
@@ -36,29 +36,42 @@ model User {
   teamMembers    TeamMember[]    // 1 User → N TeamMember
   performanceLogs PerformanceLog[] // 1 User → N PerformanceLog
 
-
+  // Quan hệ với các task được giao
+  assignedTasks  Task[]    @relation("AssignedTasks")
   ChatMessage ChatMessage[]
+}
+
+enum Priority {
+  Low
+  Medium
+  High
+}
+
+enum Status {
+  Pending
+  In_progress
+  Completed
 }
 
 model Task {
   id             Int           @id @default(autoincrement())
   title          String
   description    String?
+  priority       Priority      @default(Low)// "low", "medium", "high" mức độ ưu tiên nhiệm vụ
+  status         Status        @default(Pending)// "pending", "in_progress", "completed"
   dueDate        DateTime?
-  isCompleted    Boolean       @default(false)
-  countdownStart DateTime?
-  countdownEnd   DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
    
    // ✅ Quan hệ cha - con
   parent      Task?     @relation("SubTasks", fields: [parentId], references: [id])
   parentId    Int?
-
   subTasks    Task[]    @relation("SubTasks")
 
+  // Người được giao nhiệm vụ (assignee) <dùng cho chức năng trong đội nhóm>
+  assigneeId     Int?
+  assignee       User?     @relation("AssignedTasks", fields: [assigneeId], references: [id])
 
-  // Quan hệ
   tasklogs      TaskLog[]   
 
   templateId     Int?

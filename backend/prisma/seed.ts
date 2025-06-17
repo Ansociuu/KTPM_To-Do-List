@@ -2,30 +2,65 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.template.createMany({
-    data: [
-      {
-        name: 'Học bài 25 phút',
-        content: 'Bắt đầu Pomodoro và học 25 phút không gián đoạn.',
-        userId: 1,      //userId của admin (admin ban đầu tạo trước 1 acc để tạo template)
-        isPublic: true,         //public cho mọi người dùng (đối với user khác có thể tạo template mà không public)
-      },
-      {
-        name: 'Tập thể dục',
-        content: 'Khởi động 5 phút + chạy bộ 15 phút + giãn cơ',
-        userId: 1,
-        isPublic: true,
-      },
-      {
-        name: 'Lên kế hoạch ngày mới',
-        content: 'Ghi lại 3 việc quan trọng hôm nay.',
-        userId: 1,
-        isPublic: true,
-      },
-    ],
+  // Tạo admin user 
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'nk.anbmtabc@gmail.com' },
+    update: {},
+    create: {
+      name: 'Admin',
+      email: 'nk.anbmtabc@gmail.com',
+      password: 'password',
+      language: 'vi',
+    },
   });
+  const adminId = adminUser.id;
+
+  // Seed template phổ biến
+  await prisma.template.create({
+    data: {
+      name: 'Một ngày của tôi',
+      content: 'Dùng để bắt đầu ngày mới hiệu quả',
+      isPublic: true,
+      userId: adminId,
+      tasks: {
+        create: [
+          {
+            title: 'Học bài',
+            description: 'Tập trung học môn chính',
+            subTasks: {
+              create: [
+                { title: 'Toán', description: 'Ôn chương 2', userId: adminId },
+                { title: 'Lý', description: 'Làm bài tập trang 30', userId: adminId },
+              ],
+            },
+            userId: adminId,
+          },
+          {
+            title: 'Làm việc nhà',
+            subTasks: {
+              create: [
+                { title: 'Rửa bát', userId: adminId },
+                { title: 'Quét nhà', userId: adminId },
+              ],
+            },
+            userId: adminId,
+          },
+          {
+            title: 'Trông em',
+            description: 'Chơi với em bé 1 giờ',
+            userId: adminId,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('🌱 Seed completed!');
 }
 
 main()
-  .catch(console.error)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
   .finally(() => prisma.$disconnect());
