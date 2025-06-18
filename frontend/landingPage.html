@@ -5,175 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Task Force - Trang chủ</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Montserrat', sans-serif;
-      background-color: #f5f8fa;
-      color: #2c3e50;
-    }
-
-    header {
-      background-color: #2c3e50;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    header strong {
-      font-size: 22px;
-      color: #ffffff;
-    }
-
-    header nav a {
-      color: #ffffff;
-      margin-left: 25px;
-      text-decoration: none;
-      font-size: 15px;
-      transition: opacity 0.2s ease-in-out;
-    }
-
-    header nav a:hover {
-      opacity: 0.8;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .hero h1 {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 15px;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: #555;
-      margin-bottom: 30px;
-    }
-
-    .illustration {
-      width: 360px;
-      height: 220px;
-      margin: 0 auto 30px auto;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .illustration img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .email-form {
-      margin-top: 20px;
-    }
-
-    .email-form input[type="email"] {
-      padding: 12px 15px;
-      width: 280px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .email-form button {
-      padding: 12px 20px;
-      margin-left: 10px;
-      background-color: #2980b9;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-    }
-
-    .email-form button:hover {
-      background-color: #2471a3;
-    }
-
-    footer {
-      margin-top: 60px;
-      padding: 25px;
-      background-color: #ecf0f1;
-      text-align: center;
-      font-size: 14px;
-      color: #555;
-    }
-
-    @media (max-width: 600px) {
-      .email-form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .email-form input[type="email"], .email-form button {
-        width: 90%;
-        margin: 5px 0;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <strong>Task Force</strong>
     <nav>
-      <a href="#">Đặc trưng</a>
+      <a href="#">Tính năng</a>
       <a href="#">Đăng ký</a>
       <a href="#">Đăng nhập</a>
+      <button class="toggle-mode" onclick="toggleMode()">🌓</button>
     </nav>
   </header>
 
   <section class="hero">
-    <h1>Quản lý công việc hiệu quả</h1>
-    <p>Giúp bạn theo dõi, sắp xếp và hoàn thành công việc mọi lúc mọi nơi.</p>
+    <h1 id="typing-text"></h1>
+    <p>Giúp bạn theo dõi, sắp xếp và hoàn thành công việc mọi lúc mọi nơi với Task Force – đơn giản, mạnh mẽ và tiện lợi.</p>
 
     <div class="illustration">
-      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" alt="Quản lý công việc" />
+      <img src="assets/img/hero.jpg" alt="Quản lý công việc" />
     </div>
 
     <div class="email-form">
       <input type="email" id="email" placeholder="Nhập email của bạn" />
-      <button onclick="submitEmail()">Sign up</button>
+      <button onclick="submitEmail()">Bắt đầu</button>
     </div>
   </section>
 
   <footer>
-    Giới thiệu về nhóm | Liên hệ: taskforce@example.com
+    © 2025 Task Force. Mọi quyền được bảo lưu. | Liên hệ: taskforce@example.com
   </footer>
 
-  <script>
-    function submitEmail() {
-      const email = document.getElementById("email").value;
-      if (!email) {
-        alert("Vui lòng nhập email.");
-        return;
-      }
-
-      fetch('http://localhost:3000/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      })
-      .then(res => {
-        if (res.ok) alert("Đăng ký thành công!");
-        else alert("Có lỗi xảy ra.");
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Lỗi kết nối đến máy chủ.");
-      });
-    }
-  </script>
+  <script src="js/script.js"></script>
 </body>
 </html>

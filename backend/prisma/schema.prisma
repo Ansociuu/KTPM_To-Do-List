@@ -25,6 +25,7 @@ model User {
   password       String
   name           String
   language       Language        @default(vi)
+  points         Int             @default(0)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime?       @updatedAt
 
@@ -62,6 +63,7 @@ model Task {
   dueDate        DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+  isRewarded     Boolean       @default(false)    //Flag để kiểm tra xem task này đã từng nhận điểm 
    
    // ✅ Quan hệ cha - con
   parent      Task?     @relation("SubTasks", fields: [parentId], references: [id])

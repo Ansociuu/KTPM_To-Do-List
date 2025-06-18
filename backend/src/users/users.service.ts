@@ -15,6 +15,7 @@ export class UsersService {
         email: true,
         name: true,
         language: true,
+        points: true,
         createdAt: true,
         updatedAt: true,
       },

@@ -75,7 +75,7 @@ export class TaskService {
   });
 }
 
-  async markTaskAsCompleted(id: number) {
+  async markTaskAsCompleted(id: number) {     //Đánh dấu hoàn thành, cộng điểm
     return this.prisma.task.update({
       where: { id },
       data: {
@@ -85,14 +85,56 @@ export class TaskService {
     });
   }
 
-  async updateTaskStatus(id: number, status: Status) {
-    return this.prisma.task.update({
+  async updateTaskStatus(taskId: number, status: Status, userId: number) {
+    /*return this.prisma.task.update({
       where: { id },
       data: { 
         status, 
         updatedAt: new Date(), 
       },
+    });*/
+    const task = await this.prisma.task.findFirst({
+    where: { id: taskId },
     });
+
+    const rewarded = task.isRewarded;       //Nếu task đã được cộng điểm trước đó thì true
+    const beforeUpdate = task.status === 'Completed';   //Nếu trạng thái trước khi cập nhật là completed thì true
+    
+    // step 1: Cập nhật trạng thái
+    const updatedTask = await this.prisma.task.update({
+      where: {id: taskId},
+      data: { 
+        status, 
+        updatedAt: new Date(), 
+      },
+    });
+
+    const afterUpdate = status === 'Completed';   //Nếu trạng thái sau khi cập nhật là completed thì true
+    // step 2: cộng điểm cho user nếu task chưa hoàn thành bao giờ (VD: 10 điểm/task)
+    if (!rewarded && !beforeUpdate && afterUpdate) {
+        const rewardPoints = 10;
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: {
+            points: { increment: rewardPoints },
+            rewards: {
+              create: {
+                points: rewardPoints,
+                reason: `Hoàn thành task: ${task.title}`,
+              },
+            },
+          },
+        });
+
+        await this.prisma.task.update({
+          where: { id: taskId },
+          data: {
+            isRewarded: true,
+          },
+        });
+        return { message: 'Task completed, điểm +10', updatedTask };
+      }
+    return updatedTask;
   }
 
   async getPersonalTasks(userId: number) {

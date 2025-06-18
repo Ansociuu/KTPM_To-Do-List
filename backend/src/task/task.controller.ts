@@ -64,9 +64,11 @@ export class TaskController {
   @Patch(':id/status')
   updateStatus(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateStatusDto
+    @Body() dto: UpdateStatusDto,
+    @Req() req: Request,
   ) {
-      return this.taskService.updateTaskStatus(id, dto.status);
+      const user = req.user as any;
+      return this.taskService.updateTaskStatus(id, dto.status, user.id);
     }
 
   // Calendar view

@@ -7,9 +7,10 @@ import { UsersModule } from './users/users.module';
 import { TaskModule } from './task/task.module';
 import { PerformanceModule } from './performance/performance.module';
 import { TemplateModule } from './template/template.module';
+import { RewardModule } from './reward/reward.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, TaskModule, PerformanceModule, TemplateModule ],
+  imports: [AuthModule, UsersModule, TaskModule, PerformanceModule, TemplateModule, RewardModule],
   controllers: [AppController],  // Đảm bảo controller này đã được thêm vào đây
   providers: [
     AppService,
