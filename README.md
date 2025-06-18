@@ -33,3 +33,70 @@ Dự án **To-Do List Web App** là một ứng dụng web giúp người dùng 
 ```bash
 git clone https://github.com/Ansociuu/KTPM_To-Do-List.git
 cd KTPM_To-Do-List
+⚙️ Cách cài đặt & chạy dự án
+Clone dự án:
+
+bash
+Sao chép
+Chỉnh sửa
+git clone https://github.com/Ansociuu/KTPM_To-Do-List.git
+cd KTPM_To-Do-List
+Cài đặt backend:
+
+bash
+Sao chép
+Chỉnh sửa
+cd backend
+npm install
+Tạo file .env:
+
+env
+Sao chép
+Chỉnh sửa
+DATABASE_URL=mysql://user:password@localhost:3306/todo_database
+ACCESS_TOKEN_KEY="12345"
+REFRESH_TOKEN_KEY="54321"
+Khởi tạo CSDL với Prisma:
+
+bash
+Sao chép
+Chỉnh sửa
+npx prisma migrate dev --name init
+Chạy backend:
+
+bash
+Sao chép
+Chỉnh sửa
+npm run start:dev
+Frontend: Mở frontend/index.html trong trình duyệt. Giao tiếp qua fetch() tới API backend.
+
+✅ Kiểm thử
+Đã kiểm thử thành công các chức năng:
+
+Đăng ký/đăng nhập
+
+Thêm/sửa/xóa nhiệm vụ
+
+Tìm kiếm & lọc
+
+Tự động làm mới access token
+
+Thống kê công việc
+
+Giao diện responsive
+
+📈 Hướng phát triển tương lai
+Nhắc việc (reminder), thống kê theo thời gian
+
+Tích hợp chat, phân quyền trong nhóm
+
+PWA hoặc bản mobile app
+
+Bảo mật nâng cao (2FA, mã hóa dữ liệu)
+
+Tích hợp thông báo qua email / trình duyệt
+
+🔗 Liên kết
+📁 GitHub Repo
+
+📄 Tài liệu tham khảo, W3Schools
