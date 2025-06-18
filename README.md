@@ -4,19 +4,31 @@
 ## 🌐 Giới thiệu
 Dự án **To-Do List Web App** là một ứng dụng web giúp người dùng quản lý công việc cá nhân và nhóm một cách hiệu quả, khoa học và dễ sử dụng. Ứng dụng hỗ trợ nhiều tính năng từ cơ bản đến nâng cao như tạo nhiệm vụ, phân loại, thống kê hiệu suất, làm việc nhóm, và hỗ trợ đa ngôn ngữ.
 ## Cấu trúc thư mục
+### 📁 Cấu trúc thư mục
+
+```
 📦 KTPM_To-Do-List
-├── .vscode/                 # Cấu hình VSCode
-├── IMAGES/                 # Chứa hình ảnh minh họa (demo, báo cáo, README...)
-├── backend/                # Source code backend (NestJS + Prisma)
-│   ├── src/                # Mã nguồn chính backend
-│   ├── prisma/             # File schema.prisma và migration
-│   └── .env                # Biến môi trường kết nối DB (không commit)
-├── frontend/               # Source code giao diện người dùng
-│   ├── index.html          # Giao diện chính
-│   ├── css/                # Các file CSS
-│   └── js/                 # Các file JavaScript
-├── LICENSE                 # Giấy phép MIT
-└── README.md               # Tài liệu mô tả dự án
+├── backend/                 # Mã nguồn backend (NestJS + Prisma)
+│   ├── src/                # Code chính backend (controllers, services, modules)
+│   ├── prisma/             # Cấu hình schema.prisma, migration
+│   ├── node_modules/       # Thư viện cài bằng npm
+│   ├── package.json        # Thông tin và dependency của backend
+│   └── .env                # Biến môi trường kết nối MySQL (không public)
+│
+├── frontend/               # Giao diện người dùng
+│   ├── index.html          # Trang chính giao diện web
+│   ├── landingPage.html    # Trang giới thiệu ban đầu
+│   ├── css/                # Thư mục chứa file CSS
+│   └── js/                 # Thư mục chứa file JavaScript
+│
+├── IMAGES/                 # Hình ảnh minh họa trong báo cáo và demo
+│
+├── .vscode/                # Cấu hình môi trường làm việc với VSCode
+│
+├── LICENSE                 # Thông tin giấy phép sử dụng mã nguồn
+├── README.md               # Tài liệu mô tả dự án (file này)
+└── Báo_cáo-KTPM_Done.docx  # Báo cáo dự án đã hoàn thiện
+```
 
 ## 🚀 Công nghệ sử dụng
 - **Frontend**: HTML, CSS, JavaScript (thuần)
