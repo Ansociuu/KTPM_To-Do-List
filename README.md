@@ -3,6 +3,20 @@
 
 ## 🌐 Giới thiệu
 Dự án **To-Do List Web App** là một ứng dụng web giúp người dùng quản lý công việc cá nhân và nhóm một cách hiệu quả, khoa học và dễ sử dụng. Ứng dụng hỗ trợ nhiều tính năng từ cơ bản đến nâng cao như tạo nhiệm vụ, phân loại, thống kê hiệu suất, làm việc nhóm, và hỗ trợ đa ngôn ngữ.
+## Cấu trúc thư mục
+📦 KTPM_To-Do-List
+├── .vscode/                 # Cấu hình VSCode
+├── IMAGES/                 # Chứa hình ảnh minh họa (demo, báo cáo, README...)
+├── backend/                # Source code backend (NestJS + Prisma)
+│   ├── src/                # Mã nguồn chính backend
+│   ├── prisma/             # File schema.prisma và migration
+│   └── .env                # Biến môi trường kết nối DB (không commit)
+├── frontend/               # Source code giao diện người dùng
+│   ├── index.html          # Giao diện chính
+│   ├── css/                # Các file CSS
+│   └── js/                 # Các file JavaScript
+├── LICENSE                 # Giấy phép MIT
+└── README.md               # Tài liệu mô tả dự án
 
 ## 🚀 Công nghệ sử dụng
 - **Frontend**: HTML, CSS, JavaScript (thuần)
